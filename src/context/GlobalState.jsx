@@ -7,10 +7,12 @@ const initialState={transactions:
   { id: 3, text: 'Book', amount: -10 },
   { id: 4, text: 'Camera', amount: 150 }
 ]
-
 }
-//create context
+//create context  TODO modify
+
+
 export const GlobalContext =createContext(initialState);
+//export const GlobalContext =createContext(initialState);
 
 //provider component
 
