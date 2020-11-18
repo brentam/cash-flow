@@ -1,21 +1,68 @@
 {
-  "company": "MDC",
-  "data": {
-    "period": [
-      {
-        "dateId": "06/10/2020",
-        "date": "2020-11-17T09:57:30.821Z",
-        "type": "",
-        "debit": 0,
-        "credit": 0
-      },
-      {
-        "dateId": "05/10/2020",
-        "date": "2020-11-17T09:57:30.821Z",
-        "type": "",
-        "debit": 0,
-        "credit": 0
-      }
-    ]
-  }
+  "company": "",
+  "period": [
+    {
+      "dateId": "06/10/2020",
+      "bankSide": [
+        {
+          "id": 2,
+          "value": -40,
+          "type": "Sales Debit"
+        },
+        {
+          "id": 5,
+          "value": 30,
+          "type": "TRANSFER"
+        }
+      ],
+      "transactionSide": [
+        {
+          "id": 1,
+          "value": -10,
+          "tType": "CHEQUE",
+          "bkType": "CHEQUE_PAYMENT",
+          "chequeNumber": "#222222"
+        },
+        {
+          "id": 2,
+          "value": 80,
+          "tType": "CASH_RECEIPT",
+          "bkType": "DEPOSIT",
+          "chequeNumber": ""
+        }
+      ]
+    }
+    ,
+     {
+      "dateId": "05/10/2020",
+      "bankSide": [
+        {
+          "id": 6,
+          "value": -4000,
+          "type": "Sales Debit"
+        },
+        {
+          "id": 50,
+          "value": 3000,
+          "type": "TRANSFER"
+        }
+      ],
+      "transactionSide": [
+        {
+          "id": 1545,
+          "value": -1000,
+          "tType": "CHEQUE",
+          "bkType": "CHEQUE_PAYMENT",
+          "chequeNumber": "#222222"
+        },
+        {
+          "id": 21,
+          "value": 8000,
+          "tType": "CASH_RECEIPT",
+          "bkType": "DEPOSIT",
+          "chequeNumber": ""
+        }
+      ]
+    }
+  ]
 }
