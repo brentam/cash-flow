@@ -7,19 +7,26 @@ import "antd/dist/antd.css";
 export const BankStatementDrop = () => {
   const { Option } = Select;
 
+  const [state, setState] = useState({ firstTime: true });
+
   const periodMap = new Map(Data.period.map(i => [i.dateId, i]));
   const dateIds = [...periodMap.keys()];
 
-  const { period, changePeriod } = useContext(PeriodContext);
+
+
+  const {changePeriod } = useContext(PeriodContext);
 
   function handleChange(value) {
     console.log(value)
-    changePeriod(periodMap.get(value));
+  changePeriod(periodMap.get(value));
 
   };
 
- // handleChange(dateIds[0])
+  if (state.firstTime) {
 
+    setState({ firstTime: false })
+    handleChange(dateIds[0])
+  }
   return (
 
     <>
