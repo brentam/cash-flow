@@ -14,6 +14,7 @@ export const BankStatementDrop = () => {
 
 
 
+
   const {changePeriod } = useContext(PeriodContext);
 
   function handleChange(value) {
@@ -34,7 +35,7 @@ export const BankStatementDrop = () => {
       <Select defaultValue={dateIds[0]}
         onChange={handleChange}
       >
-        {dateIds.map(t => <Option value={t}>{t}</Option>)}
+        {dateIds.map(t => <Option key ={t} value={t}>{t}</Option>)}
       </Select>
     </>
   )

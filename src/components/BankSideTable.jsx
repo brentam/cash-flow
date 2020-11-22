@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import 'antd/dist/antd.css';
 import { Table } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
@@ -25,23 +25,71 @@ export const BankSideTable = () => {
         {
             title: 'ID',
             dataIndex: 'id',
-            key: 'id',
         },
         {
             title: 'Type',
             dataIndex: 'type',
-            key: 'type',
         }, {
             title: 'Value',
             dataIndex: 'value',
-            key: 'value',
         }
         ,
     ];
 
 
+
+    const [rowState, setRowState] = useState({ selectedRowKeys: [] });
+
+
+    const onSelectedRowKeysChange = (selectedRowKeys) => {
+        setRowState({ selectedRowKeys })
+    }
+
+
+    const selectRow = (record) => {
+        const selectedRowKeys = rowState.selectedRowKeys.slice(0);
+        const indexOfRow = selectedRowKeys.indexOf(record.key);
+        if (indexOfRow >= 0) {
+            selectedRowKeys.splice(indexOfRow, 1);
+
+        } else {
+            selectedRowKeys.push(record.key);
+        }
+
+        setRowState({ selectedRowKeys: selectedRowKeys })
+    }
+
+
+
+    const { selectedRowKeys } = rowState;
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectedRowKeysChange,
+    };
+
+
+    const rowSelection2 = {
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record) => ({
+          disabled: record.name === 'Disabled User',
+          // Column configuration not to be checked
+          name: record.name,
+        }),
+      };
+      
     return (
-        <Table dataSource={dataSource1} columns={columns} />
+        <Table 
+        rowKey="id"
+            dataSource={dataSource1}
+            columns={columns}
+            //    onRow={ (record)=>(
+            //       {onClick: ()=>{selectRow(record);},})}
+
+            rowSelection={rowSelection2}
+
+        />
     )
 }
 

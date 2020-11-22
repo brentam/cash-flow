@@ -4,6 +4,7 @@ import { GlobalProvider } from './context/GlobalState';
 import { PeriodProvider } from './context/PeriodState';
 import { BankStatementDrop } from './components/BankStatementDrop';
 import { BankSideTable } from './components/BankSideTable';
+import { Demo } from './components/Demo';
 
 
 
@@ -13,7 +14,8 @@ function App() {
       <Header />
       <PeriodProvider>
         <BankStatementDrop />
-        <BankSideTable />
+        <Demo />
+        <BankSideTable/>
 
       </PeriodProvider>
 
