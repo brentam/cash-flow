@@ -1,12 +1,17 @@
 import React, { useContext, useState } from 'react'
 import 'antd/dist/antd.css';
-import { Table,Space } from 'antd';
+import { Table,Space, Alert } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
 
 export const BankSideTable = () => {
     //   const { period, changePeriod } = useContext(PeriodContext);
-    const { period, changePeriod } = useContext(PeriodContext);
+    const { period, splitBankSideTransaction} = useContext(PeriodContext);
+
+    //for the table selected state
+    const [rowState, setRowState] = useState({ selectedRowKeys: [] });
+    
     const dataSource1 = period.bankSide;
+    const maxIndex=dataSource1.length?(dataSource1.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
 
     const columns = [
         {
@@ -19,6 +24,7 @@ export const BankSideTable = () => {
         }, {
             title: 'Value',
             dataIndex: 'value',
+            onCell: (record)=> ({onClick: ()=>{selectRow(record);}})
         }
         ,
         {
@@ -26,7 +32,7 @@ export const BankSideTable = () => {
             key: 'action',
             render: (text, record) => (
               <Space size="middle">
-            <a>Split {record.value}</a>
+            <a onClick={()=>onSplit(record)} >Split {record.value}</a>
               </Space>
             ),
           },
@@ -34,8 +40,25 @@ export const BankSideTable = () => {
 
 
 
-    const [rowState, setRowState] = useState({ selectedRowKeys: [] });
 
+
+    const onSplit =(record) =>{
+        //TODO add modal screen to capture values
+        //for now just split in the middle
+        const value=record.value;
+        const val1= (value/2).toFixed(2);
+        const val2= value -(val1);
+        splitBankSideTransaction({originalId:record.id,newTransactions:[ {
+          "id": maxIndex+1,
+          "value": val1,
+          "type": record.type
+        }, {
+          "id": maxIndex+2,
+          "value": val2,
+          "type": record.type
+        }]})
+
+    }
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
         setRowState({ selectedRowKeys })
@@ -69,7 +92,9 @@ export const BankSideTable = () => {
         rowKey="id"
             dataSource={dataSource1}
             columns={columns}
-                 onRow={ (record)=>( {onClick: ()=>{selectRow(record);},})}
+            //we will use the onCell to select click the rows.. because some
+            //cells we dont want to trigger the selection (i.e. split)
+                //   onRow={ (record)=>( {onClick: ()=>{selectRow(record);},})}
 
             rowSelection={rowSelection}
 

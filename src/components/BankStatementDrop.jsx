@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect,useContext } from 'react';
 import Data from '../data/model.json';
 import { PeriodContext } from '../context/PeriodState'
 import { Select } from "antd";
@@ -7,15 +7,13 @@ import "antd/dist/antd.css";
 export const BankStatementDrop = () => {
   const { Option } = Select;
 
-  const [state, setState] = useState({ firstTime: true });
-
   const periodMap = new Map(Data.period.map(i => [i.dateId, i]));
   const dateIds = [...periodMap.keys()];
 
 
 
 
-  const {changePeriod } = useContext(PeriodContext);
+  const {period,changePeriod } = useContext(PeriodContext);
 
   function handleChange(value) {
     console.log(value)
@@ -23,11 +21,13 @@ export const BankStatementDrop = () => {
 
   };
 
-  if (state.firstTime) {
+  useEffect(() => {
+    //TODO find a better way to initialize the period
+    if(!period.bankSide.length){
+       handleChange(dateIds[0])
+    }
+})
 
-    setState({ firstTime: false })
-    handleChange(dateIds[0])
-  }
   return (
 
     <>
