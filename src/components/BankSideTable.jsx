@@ -1,14 +1,17 @@
 import React, { useContext, useState } from 'react'
 import 'antd/dist/antd.css';
-import { Table,Space, Alert } from 'antd';
+import { Modal,Table,Space, Alert } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
+import { TableModalContext } from '../context/TableModalState'
+import { MyModal } from './MyModal'
 
 export const BankSideTable = () => {
     //   const { period, changePeriod } = useContext(PeriodContext);
     const { period, splitBankSideTransaction} = useContext(PeriodContext);
+    const { modalState,showModal} = useContext(TableModalContext);
 
     //for the table selected state
-    const [rowState, setRowState] = useState({ selectedRowKeys: [] });
+    const [rowState, setRowState] = useState({ selectedRowKeys: [],modalVisible:false });
     
     const dataSource1 = period.bankSide;
     const maxIndex=dataSource1.length?(dataSource1.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
@@ -33,6 +36,7 @@ export const BankSideTable = () => {
             render: (text, record) => (
               <Space size="middle">
             <a onClick={()=>onSplit(record)} >Split {record.value}</a>
+            {/* <a onClick={()=>onSplit(record)} >Split {record.value}</a> */}
               </Space>
             ),
           },
@@ -45,6 +49,8 @@ export const BankSideTable = () => {
     const onSplit =(record) =>{
         //TODO add modal screen to capture values
         //for now just split in the middle
+
+        /*
         const value=record.value;
         const val1= (value/2).toFixed(2);
         const val2= value -(val1);
@@ -57,11 +63,13 @@ export const BankSideTable = () => {
           "value": val2,
           "type": record.type
         }]})
-
+        */
+       
+        showModal({visible:true,value:record.value});
     }
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
-        setRowState({ selectedRowKeys })
+        setRowState({...rowState, selectedRowKeys })
     }
 
 
@@ -75,7 +83,7 @@ export const BankSideTable = () => {
             selectedRowKeys.push(record.id);
         }
 
-        setRowState({ selectedRowKeys })
+        setRowState({...rowState, selectedRowKeys })
     }
 
 
@@ -88,6 +96,7 @@ export const BankSideTable = () => {
 
       
     return (
+        <>
         <Table 
         rowKey="id"
             dataSource={dataSource1}
@@ -99,6 +108,8 @@ export const BankSideTable = () => {
             rowSelection={rowSelection}
 
         />
+        <MyModal />
+        </>
     )
 }
 

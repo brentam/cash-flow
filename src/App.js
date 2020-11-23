@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { PeriodProvider } from './context/PeriodState';
+import { TableModalProvider } from './context/TableModalState';
 import { BankStatementDrop } from './components/BankStatementDrop';
 import { BankSideTable } from './components/BankSideTable';
 
@@ -12,7 +13,11 @@ function App() {
       <Header />
       <PeriodProvider>
         <BankStatementDrop />
-        <BankSideTable/>
+
+        <TableModalProvider>
+
+          <BankSideTable />
+        </TableModalProvider>
 
       </PeriodProvider>
 
