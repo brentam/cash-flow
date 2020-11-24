@@ -2,11 +2,15 @@ import React, { useContext, useState } from 'react'
 import 'antd/dist/antd.css';
 import { Modal, Table, Space, Alert } from 'antd';
 import { TableModalContext } from '../context/TableModalState'
+import { PeriodContext } from '../context/PeriodState'
 
 export const MyModal = ({resultFunction}) => {
 
-  const { modalState, resetModal } = useContext(TableModalContext);
+  const {splitCashFlowTransaction} = useContext(PeriodContext);
+  const { modalState, resetModal ,handleChangeValues} = useContext(TableModalContext);
   const { visible, modalTransactions } = modalState;
+  // const [amounts, setAmount] = useState([modalState.value]);
+  const amounts=modalTransactions;
 
   // const showModal = () => {
   // //   this.setState({
@@ -16,7 +20,9 @@ export const MyModal = ({resultFunction}) => {
 
   const handleOk = e => {
     console.log(e);
+    splitCashFlowTransaction(modalState.id,modalTransactions);
     resultFunction(amounts);
+    resetModal();
     //   this.setState({
     //     visible: false,
     //   });
@@ -30,13 +36,14 @@ export const MyModal = ({resultFunction}) => {
     //   });
   };
 
-  const [amounts, setAmount] = useState([]);
 
   const handleChange = (e) => {
-    const inputId=e.target.name;
-    let arr = [...amounts] 
-    arr[inputId]=e.target.value;  
-    setAmount(arr);
+    // const inputId=e.target.name;
+    // let arr = [...amounts] 
+    // arr[inputId]=e.target.value;  
+    // setAmount(arr);
+    handleChangeValues(e.target.name,e.target.value);
+    
   }
 
   const onSubmit = (e) => {

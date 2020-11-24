@@ -58,7 +58,7 @@ export const CashFlowTag = () => {
 
 
     const onSplit = (record) => {
-        showModal({ visible: true, value: record.value });
+        showModal({ visible: true, value: record.value ,id:record.id});
     }
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
@@ -87,8 +87,11 @@ export const CashFlowTag = () => {
         onChange: onSelectedRowKeysChange,
     };
 
-    const resultFunction=(arr)=>{
-        alert(arr.length);
+    const resultFunction = (arr) => {
+        let i;
+        for (i = 0; i < arr.length; i++) {
+            // alert(arr[i]);
+        }
     }
 
     return (
@@ -104,7 +107,7 @@ export const CashFlowTag = () => {
                 rowSelection={rowSelection}
 
             />
-            <MyModal resultFunction={resultFunction}/>
+            <MyModal resultFunction={resultFunction} />
         </>
     )
 }
