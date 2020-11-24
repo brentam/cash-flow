@@ -5,7 +5,7 @@ import { PeriodContext } from '../context/PeriodState'
 import { TableModalContext } from '../context/TableModalState'
 import { MyModal } from './MyModal'
 
-export const BankSideTable = () => {
+export const BankSideTag = () => {
     //   const { period, changePeriod } = useContext(PeriodContext);
     const { period, splitBankSideTransaction} = useContext(PeriodContext);
     const { modalState,showModal} = useContext(TableModalContext);

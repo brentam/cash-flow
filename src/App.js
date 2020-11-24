@@ -3,7 +3,8 @@ import { Header } from './components/Header';
 import { PeriodProvider } from './context/PeriodState';
 import { TableModalProvider } from './context/TableModalState';
 import { BankStatementDrop } from './components/BankStatementDrop';
-import { BankSideTable } from './components/BankSideTable';
+import { BankSideTag } from './components/BankSideTag';
+import { CashFlowTag } from './components/CashFlowTag';
 
 
 
@@ -16,7 +17,8 @@ function App() {
 
         <TableModalProvider>
 
-          <BankSideTable />
+          {/* <BankSideTag /> */}
+          <CashFlowTag/>
         </TableModalProvider>
 
       </PeriodProvider>
