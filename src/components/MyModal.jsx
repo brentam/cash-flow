@@ -1,13 +1,12 @@
 import React, { useContext, useState } from 'react'
-import 'antd/dist/antd.css';
-import { Modal, Table, Space, Alert } from 'antd';
+import { Modal, Button,InputNumber} from 'antd';
 import { TableModalContext } from '../context/TableModalState'
 import { PeriodContext } from '../context/PeriodState'
 
 export const MyModal = ({resultFunction}) => {
 
   const {splitCashFlowTransaction} = useContext(PeriodContext);
-  const { modalState, resetModal ,handleChangeValues} = useContext(TableModalContext);
+  const { modalState, resetModal ,handleChangeValues,createNewModalTransaction} = useContext(TableModalContext);
   const { visible, modalTransactions } = modalState;
   // const [amounts, setAmount] = useState([modalState.value]);
   const amounts=modalTransactions;
@@ -37,12 +36,12 @@ export const MyModal = ({resultFunction}) => {
   };
 
 
-  const handleChange = (e) => {
+  const handleChange = (e,idx) => {
     // const inputId=e.target.name;
     // let arr = [...amounts] 
     // arr[inputId]=e.target.value;  
     // setAmount(arr);
-    handleChangeValues(e.target.name,e.target.value);
+    handleChangeValues(e,idx);
     
   }
 
@@ -65,27 +64,31 @@ export const MyModal = ({resultFunction}) => {
         onCancel={handleCancel}
       >
         <h3>Add new transaction</h3>
+        <Button className="btn" onClick={()=>createNewModalTransaction(0)}>Add transaction</Button>
         <form onSubmit={onSubmit}>
           {
             modalTransactions.map((val, idx) => {
               let trId = `tr-${idx}`, ageId = `age-${idx}`
               return (
-                <div key={idx}>
-                  <label htmlFor={trId}>{`Transacion #${idx + 1}`}</label>
-                  <input
-                    type="text"
-                    name={idx}
-                    data-id={idx}
-                    id={trId}
-                    className="name"
-                    value={amounts[idx]}
-                    onChange={handleChange}
-                  />
-                </div>
+                // <div key={idx}>
+                //   <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
+                //   <input
+                //     type="text"
+                //     name={idx}
+                //     data-id={idx}
+                //     id={trId}
+                //     className="name"
+                //     value={amounts[idx]}
+                //     onChange={handleChange}
+                //   />
+                // </div>
+                <InputNumber 
+                     value={amounts[idx]}
+                     onChange={(value)=>handleChange(value,idx)}
+                />
               )
             })
           }
-          <button className="btn">Add transaction</button>
         </form>
       </Modal>
     </div>

@@ -28,13 +28,19 @@ export function TableModalProvider({ children }) {
     // setAmount(arr);
   }
 
+  function createNewModalTransaction(value){
+     const clonedArray = [...state.modalTransactions];
+     clonedArray.push(value);
+     setState({...state, modalTransactions:clonedArray});
+  }
+
   const onSubmit = (e) => {
     e.preventDefault();
   }
 
   return (
     <TableModalContext.Provider
-      value={{ modalState: state, showModal, resetModal, handleChangeValues }}
+      value={{ modalState: state, showModal, resetModal, handleChangeValues,createNewModalTransaction }}
 
     >
       {children}
