@@ -21,7 +21,7 @@ export function TableModalProvider({ children }) {
     setState({ ...state, visible: visible, value: value, id:id,modalTransactions: modal });
   }
 
-  function handleChangeValues(index, value) {
+  function handleChangeValues(value, index) {
     let arr = [...state.modalTransactions]
     arr[index] = value;
     setState({ ...state, modalTransactions: arr })

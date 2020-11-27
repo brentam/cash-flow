@@ -36,12 +36,12 @@ export const MyModal = ({resultFunction}) => {
   };
 
 
-  const handleChange = (e,idx) => {
+  const handleChange = (value,idx) => {
     // const inputId=e.target.name;
     // let arr = [...amounts] 
     // arr[inputId]=e.target.value;  
     // setAmount(arr);
-    handleChangeValues(e,idx);
+    handleChangeValues(value,idx);
     
   }
 
@@ -68,7 +68,7 @@ export const MyModal = ({resultFunction}) => {
         <form onSubmit={onSubmit}>
           {
             modalTransactions.map((val, idx) => {
-              let trId = `tr-${idx}`, ageId = `age-${idx}`
+              let trId = `tr-${idx}`;
               return (
                 // <div key={idx}>
                 //   <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
@@ -82,10 +82,14 @@ export const MyModal = ({resultFunction}) => {
                 //     onChange={handleChange}
                 //   />
                 // </div>
-                <InputNumber 
+                <div>
+                   <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
+                <InputNumber id={trId}
                      value={amounts[idx]}
                      onChange={(value)=>handleChange(value,idx)}
                 />
+
+                </div>
               )
             })
           }
