@@ -27,6 +27,13 @@ export function TableModalProvider({ children }) {
     setState({ ...state, modalTransactions: arr })
     // setAmount(arr);
   }
+  function deleteModal(index) {
+
+     let arr = [...state.modalTransactions];
+     arr.splice(index,1);
+    setState({ ...state, modalTransactions: arr })
+  }
+
 
   function createNewModalTransaction(value){
      const clonedArray = [...state.modalTransactions];
@@ -40,7 +47,7 @@ export function TableModalProvider({ children }) {
 
   return (
     <TableModalContext.Provider
-      value={{ modalState: state, showModal, resetModal, handleChangeValues,createNewModalTransaction }}
+      value={{ modalState: state, showModal, resetModal, handleChangeValues,createNewModalTransaction,deleteModal }}
 
     >
       {children}

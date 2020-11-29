@@ -1,15 +1,16 @@
 import React, { useContext, useState } from 'react'
-import { Modal, Button,InputNumber} from 'antd';
+import { Modal, Button, InputNumber, Alert } from 'antd';
 import { TableModalContext } from '../context/TableModalState'
 import { PeriodContext } from '../context/PeriodState'
+import '../theApp.css';
 
-export const MyModal = ({resultFunction}) => {
+export const MyModal = ({ resultFunction }) => {
 
-  const {splitCashFlowTransaction} = useContext(PeriodContext);
-  const { modalState, resetModal ,handleChangeValues,createNewModalTransaction} = useContext(TableModalContext);
-  const { visible, modalTransactions } = modalState;
+  const { splitCashFlowTransaction } = useContext(PeriodContext);
+  const { modalState, resetModal, handleChangeValues, createNewModalTransaction,deleteModal} = useContext(TableModalContext);
+  const { visible, value, modalTransactions } = modalState;
   // const [amounts, setAmount] = useState([modalState.value]);
-  const amounts=modalTransactions;
+  const amounts = modalTransactions;
 
   // const showModal = () => {
   // //   this.setState({
@@ -19,7 +20,7 @@ export const MyModal = ({resultFunction}) => {
 
   const handleOk = e => {
     console.log(e);
-    splitCashFlowTransaction(modalState.id,modalTransactions);
+    splitCashFlowTransaction(modalState.id, modalTransactions);
     resultFunction(amounts);
     resetModal();
     //   this.setState({
@@ -30,19 +31,19 @@ export const MyModal = ({resultFunction}) => {
   const handleCancel = e => {
     console.log(e);
     resetModal();
-    //   this.setState({
+    //   this.setState({~
     //     visible: false,
     //   });
   };
 
 
-  const handleChange = (value,idx) => {
+  const handleChange = (value, idx) => {
     // const inputId=e.target.name;
     // let arr = [...amounts] 
     // arr[inputId]=e.target.value;  
     // setAmount(arr);
-    handleChangeValues(value,idx);
-    
+    handleChangeValues(value, idx);
+
   }
 
   const onSubmit = (e) => {
@@ -54,41 +55,57 @@ export const MyModal = ({resultFunction}) => {
   //   text += cars[i] + "<br>";
   // }
 
+  const total = modalTransactions.reduce((a, b) => a + b, 0);
 
+  function Message(props) {
+    if (props.size < 2) {
+      return <Alert message="Split operation needs minimum of 2 transactins!" type="error" />
+    }
+    if (props.value == props.total) {
+      return <Alert message="Click Split to confirm" type="success" />
+    } else {
+      return <Alert message={`Total of split transactions should total to: ` + props.value} type="error" />
+    }
+  }
+
+  const transactionSize = modalTransactions ? modalTransactions.length : 0;
   return (
-    <div>
+    <div >
       <Modal
-        title="Basic Modal"
+        title={`Split ` + value}
         visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        // onOk={handleOk}
+        // onCancel={handleCancel}
+
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+            </Button>,
+          <Button key="ok" disabled={(value != total ) || transactionSize<2} type="primary" onClick={handleOk}>
+            Split
+            </Button>,
+        ]}
       >
-        <h3>Add new transaction</h3>
-        <Button className="btn" onClick={()=>createNewModalTransaction(0)}>Add transaction</Button>
+        <Message value={value} total={total} size={transactionSize} />
+        <Button className="btn" onClick={() => createNewModalTransaction(0)}>
+          <h3>Add new transaction</h3>
+        </Button>
         <form onSubmit={onSubmit}>
           {
             modalTransactions.map((val, idx) => {
               let trId = `tr-${idx}`;
               return (
-                // <div key={idx}>
-                //   <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
-                //   <input
-                //     type="text"
-                //     name={idx}
-                //     data-id={idx}
-                //     id={trId}
-                //     className="name"
-                //     value={amounts[idx]}
-                //     onChange={handleChange}
-                //   />
-                // </div>
-                <div>
-                   <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
-                <InputNumber id={trId}
-                     value={amounts[idx]}
-                     onChange={(value)=>handleChange(value,idx)}
-                />
+                <div key={idx}>
+                  <label htmlFor={trId}>{`Transacion #${idx + 1} `}</label>
+                  <span>
 
+                    <InputNumber id={trId}
+                      value={amounts[idx]}
+                      onChange={(value) => handleChange(value, idx)}
+                    />
+                    <button className="delete-btn" onClick={()=>deleteModal(idx)}
+                    >x</button>
+                  </span>
                 </div>
               )
             })
