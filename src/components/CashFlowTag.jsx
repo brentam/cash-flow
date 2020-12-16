@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react'
-import { Modal, Table, Space, Alert } from 'antd';
-import { PeriodContext, CASH_FLOW_SIDE, BANK_SIDE } from '../context/PeriodState'
-import { initialState, TableModalContext } from '../context/TableModalState'
+import { Table } from 'antd';
+import { PeriodContext} from '../context/PeriodState'
+import {CASH_FLOW_SIDE,BANK_SIDE} from '../consts.js'
+import { TableModalContext } from '../context/TableModalState'
+import { MatchedContext } from '../context/MatchedState'
 import { MyModal } from './MyModal'
 import CashFlowSumary from './CashFlowSummary'
 import Money from './Money'
@@ -29,8 +31,9 @@ export const CashFlowTag = ({ type }) => {
     //   const { period, changePeriod } = useContext(PeriodContext);
     const { period } = useContext(PeriodContext);
     const { showModal } = useContext(TableModalContext);
+    const {changeFocusPerValue,isValueInFocus,clearFocus}=useContext(MatchedContext);
     //for the table selected state
-    const [rowState, setRowState] = useState({ selectedRowKeys: [], modalVisible: false });
+    const [rowState, setRowState] = useState({ selectedRowKeys: [] });
 
     const onSplit = (record) => {
         showModal({ type: type, visible: true, value: record.value, id: record.id });
@@ -38,10 +41,10 @@ export const CashFlowTag = ({ type }) => {
 
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
-        setRowState({ ...rowState, selectedRowKeys })
+        onSelectionChange(selectedRowKeys);
     }
 
-
+    
     const selectRow = (record) => {
         const selectedRowKeys = rowState.selectedRowKeys.slice(0);
         const indexOfRow = selectedRowKeys.indexOf(record.id);
@@ -53,6 +56,7 @@ export const CashFlowTag = ({ type }) => {
         }
 
         setRowState({ ...rowState, selectedRowKeys })
+        onSelectionChange(selectedRowKeys);
     }
 
     //load config for table rendering
@@ -60,6 +64,20 @@ export const CashFlowTag = ({ type }) => {
         getCashFlowSideConfig(period, onSplit, selectRow) :
         getBankSideConfig(period, onSplit, selectRow)
     );
+
+    function onSelectionChange(selectedRowKeys){
+        setRowState({ ...rowState, selectedRowKeys })
+        if(selectedRowKeys.length){
+            const value= dataSource.filter(element => element.id===selectedRowKeys[0].id)
+            changeFocusPerValue(value.value);
+        }else{
+            clearFocus();
+        }
+
+    }
+
+
+
     const initialValue = { totalCredit: +0, totalDebit: +0 }
     const accumulated = dataSource.length ?
         dataSource.reduce(
@@ -72,12 +90,17 @@ export const CashFlowTag = ({ type }) => {
                 }
                 return accumulator;
 
-            },initialValue) : initialValue;
+            }, initialValue) : initialValue;
 
     const { selectedRowKeys } = rowState;
     const rowSelection = {
-        selectedRowKeys,
+       selectedRowKeys,
         onChange: onSelectedRowKeysChange,
+        getCheckboxProps: (record) => ({
+            disabled: !isValueInFocus(record.value),
+            // Column configuration not to be checked
+            id: record.id,
+        }),
     };
     // alert(maxIndex.c);
     return (

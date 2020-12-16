@@ -71,7 +71,7 @@ export const MyModal = () => {
   return (
     <div >
       <Modal
-        title={`Split ` + type }
+        title={`Split ` + value }
         visible={visible}
         // onOk={handleOk}
         onCancel={handleCancel}

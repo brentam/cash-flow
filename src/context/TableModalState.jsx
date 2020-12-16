@@ -1,6 +1,5 @@
 import React, { createContext, useState } from 'react'
-import Data from '../data/model.json';
-import { CASH_FLOW_SIDE, BANK_SIDE } from '../context/PeriodState'
+import {CASH_FLOW_SIDE,BANK_SIDE} from '../consts.js'
 
 
 export const initialState = { visible: false, value: +0, id:-1,modalTransactions: [],type:CASH_FLOW_SIDE }

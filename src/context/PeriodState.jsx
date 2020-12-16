@@ -1,8 +1,5 @@
 import React, { createContext, useReducer,useState } from 'react'
-import Data from '../data/model.json';
-
-export const BANK_SIDE=+10;
-export const CASH_FLOW_SIDE=+20;
+import {CASH_FLOW_SIDE,BANK_SIDE} from '../consts.js'
 
 const initialState={bankSide:[], transactionSide:[]};
 

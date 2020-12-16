@@ -1,9 +1,10 @@
 import React from 'react';
 import { Header } from './components/Header';
-import { PeriodProvider ,CASH_FLOW_SIDE,BANK_SIDE } from './context/PeriodState';
+import { PeriodProvider } from './context/PeriodState';
+import {CASH_FLOW_SIDE,BANK_SIDE} from './consts.js'
 import { TableModalProvider } from './context/TableModalState';
+import { MatchedProvider } from './context/MatchedState';
 import { BankStatementDrop } from './components/BankStatementDrop';
-import { BankSideTag } from './components/BankSideTag';
 import { CashFlowTag } from './components/CashFlowTag';
 
 
@@ -15,11 +16,14 @@ function App() {
       <PeriodProvider>
         <BankStatementDrop />
 
+        <MatchedProvider>
         <TableModalProvider>
+
           <CashFlowTag  type={BANK_SIDE}/>
           <CashFlowTag  type={CASH_FLOW_SIDE}/>
         </TableModalProvider>
 
+          </MatchedProvider>
       </PeriodProvider>
 
       <div className="container">
