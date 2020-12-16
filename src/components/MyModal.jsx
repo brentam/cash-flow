@@ -6,7 +6,7 @@ import '../theApp.css';
 
 export const MyModal = ({ resultFunction }) => {
 
-  const { splitCashFlowTransaction } = useContext(PeriodContext);
+  const  splitCashFlowTransaction  = useContext(PeriodContext)["splitCashFlowTransaction"];
   const { modalState, resetModal, handleChangeValues, createNewModalTransaction,deleteModal} = useContext(TableModalContext);
   const { visible, value, modalTransactions } = modalState;
   // const [amounts, setAmount] = useState([modalState.value]);
@@ -75,7 +75,7 @@ export const MyModal = ({ resultFunction }) => {
         title={`Split ` + value}
         visible={visible}
         // onOk={handleOk}
-        // onCancel={handleCancel}
+         onCancel={handleCancel}
 
         footer={[
           <Button key="back" onClick={handleCancel}>

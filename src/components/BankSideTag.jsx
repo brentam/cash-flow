@@ -1,20 +1,22 @@
 import React, { useContext, useState } from 'react'
-import 'antd/dist/antd.css';
-import { Modal,Table,Space, Alert } from 'antd';
+import { Modal, Table, Space, Alert } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
 import { TableModalContext } from '../context/TableModalState'
 import { MyModal } from './MyModal'
+import  Money  from './Money'
+import '../theApp.css';
+import 'antd/dist/antd.css';
 
 export const BankSideTag = () => {
     //   const { period, changePeriod } = useContext(PeriodContext);
-    const { period, splitBankSideTransaction} = useContext(PeriodContext);
-    const { modalState,showModal} = useContext(TableModalContext);
+    const { period, splitBankSideTransaction } = useContext(PeriodContext);
+    const { modalState, showModal } = useContext(TableModalContext);
 
     //for the table selected state
-    const [rowState, setRowState] = useState({ selectedRowKeys: [],modalVisible:false });
-    
+    const [rowState, setRowState] = useState({ selectedRowKeys: [], modalVisible: false });
+
     const dataSource1 = period.bankSide;
-    const maxIndex=dataSource1.length?(dataSource1.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
+    const maxIndex = dataSource1.length ? (dataSource1.reduce((prev, current) => { return (prev.id > current.id) ? prev : current }).id) : 0;
 
     const columns = [
         {
@@ -27,26 +29,36 @@ export const BankSideTag = () => {
         }, {
             title: 'Value',
             dataIndex: 'value',
-            onCell: (record)=> ({onClick: ()=>{selectRow(record);}})
+            render(text, record) {
+                return {
+                    // props: {
+                    //     style: { background: parseInt(text) < 0 ? "red" : "green" }
+                    // },
+                    children: <Money value={text}/>
+                };
+            },
+
+            onCell: (record) => ({ onClick: () => { selectRow(record); } }),
+
         }
         ,
         {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
-              <Space size="middle">
-            <a onClick={()=>onSplit(record)} >Split {record.value}</a>
-            {/* <a onClick={()=>onSplit(record)} >Split {record.value}</a> */}
-              </Space>
+                <Space size="middle">
+                    <a onClick={() => onSplit(record)} >Split {record.value}</a>
+                    {/* <a onClick={()=>onSplit(record)} >Split {record.value}</a> */}
+                </Space>
             ),
-          },
+        },
     ];
 
 
 
 
 
-    const onSplit =(record) =>{
+    const onSplit = (record) => {
         //TODO add modal screen to capture values
         //for now just split in the middle
 
@@ -64,12 +76,12 @@ export const BankSideTag = () => {
           "type": record.type
         }]})
         */
-       
-        showModal({visible:true,value:record.value});
+
+        showModal({ visible: true, value: record.value });
     }
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
-        setRowState({...rowState, selectedRowKeys })
+        setRowState({ ...rowState, selectedRowKeys })
     }
 
 
@@ -83,7 +95,7 @@ export const BankSideTag = () => {
             selectedRowKeys.push(record.id);
         }
 
-        setRowState({...rowState, selectedRowKeys })
+        setRowState({ ...rowState, selectedRowKeys })
     }
 
 
@@ -94,21 +106,21 @@ export const BankSideTag = () => {
         onChange: onSelectedRowKeysChange,
     };
 
-      
+
     return (
         <>
-        <Table 
-        rowKey="id"
-            dataSource={dataSource1}
-            columns={columns}
-            //we will use the onCell to select click the rows.. because some
-            //cells we dont want to trigger the selection (i.e. split)
+            <Table
+                rowKey="id"
+                dataSource={dataSource1}
+                columns={columns}
+                //we will use the onCell to select click the rows.. because some
+                //cells we dont want to trigger the selection (i.e. split)
                 //   onRow={ (record)=>( {onClick: ()=>{selectRow(record);},})}
 
-            rowSelection={rowSelection}
+                rowSelection={rowSelection}
 
-        />
-        <MyModal />
+            />
+            <MyModal />
         </>
     )
 }

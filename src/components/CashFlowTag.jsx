@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react'
-import 'antd/dist/antd.css';
 import { Modal, Table, Space, Alert } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
 import { TableModalContext } from '../context/TableModalState'
 import { MyModal } from './MyModal'
+import CashFlowSumary from './CashFlowSummary'
+import  Money  from './Money'
+import 'antd/dist/antd.css';
+import '../theApp.css';
 
 export const CashFlowTag = () => {
     //   const { period, changePeriod } = useContext(PeriodContext);
@@ -19,6 +22,17 @@ export const CashFlowTag = () => {
     const onCellConfig = (record) => {
         return ({ onClick: () => { selectRow(record) } })
     }
+    const valueStyle = (text, record) => {
+        return {
+            // props: {
+            //     style: { color: parseInt(text) < 0 ? "red" : "green" }
+            // },
+            // children: <div >{text}</div>
+            //  children: <div className={parseInt(text) < 0 ? "red" : "green"} >{text}</div>
+                    children: <Money value={text}/>
+        };
+
+    }
 
     const columns = [
         {
@@ -33,6 +47,7 @@ export const CashFlowTag = () => {
         {
             title: 'Value',
             dataIndex: 'value',
+            render: valueStyle,
             onCell: onCellConfig
         }
         ,
@@ -58,7 +73,7 @@ export const CashFlowTag = () => {
 
 
     const onSplit = (record) => {
-        showModal({ visible: true, value: record.value ,id:record.id});
+        showModal({ visible: true, value: record.value, id: record.id });
     }
 
     const onSelectedRowKeysChange = (selectedRowKeys) => {
@@ -96,7 +111,10 @@ export const CashFlowTag = () => {
 
     return (
         <>
-            <Table
+        <div className="zone">
+
+        <CashFlowSumary totals={{totalCredit:+10, totalDebit:-2}}/>
+                    <Table
                 rowKey="id"
                 dataSource={dataSource1}
                 columns={columns}
@@ -108,6 +126,7 @@ export const CashFlowTag = () => {
 
             />
             <MyModal resultFunction={resultFunction} />
+        </div>
         </>
     )
 }
