@@ -2,24 +2,24 @@ import Money from './components/Money'
 import { Modal, Table, Space, Alert } from 'antd';
 
 
+const valueStyle = (text, record) => {
+    return {
+        // props: {
+        //     style: { color: parseInt(text) < 0 ? "red" : "green" }
+        // },
+        // children: <div >{text}</div>
+        children: <Money value={text} />
+    };
+
+}
 
 
-
-export function getCashFlowSideConfig(period, splitFuntion, selectRowFunction) {
+export function getCashFlowSideConfig(period, renderSplitFunction, selectRowFunction) {
 
     const onCellConfig = (record) => {
         return ({ onClick: () => { selectRowFunction(record) } })
     }
-    const valueStyle = (text, record) => {
-        return {
-            // props: {
-            //     style: { color: parseInt(text) < 0 ? "red" : "green" }
-            // },
-            // children: <div >{text}</div>
-            children: <Money value={text} />
-        };
-
-    }
+    
 
     const columns = [
         {
@@ -46,11 +46,7 @@ export function getCashFlowSideConfig(period, splitFuntion, selectRowFunction) {
         {
             title: 'Action',
             key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <a onClick={() => splitFuntion(record)} >Split </a>
-                </Space>
-            ),
+            render: renderSplitFunction,
         },
     ];
 
@@ -58,20 +54,10 @@ export function getCashFlowSideConfig(period, splitFuntion, selectRowFunction) {
     return { columns: columns, dataSource: period.transactionSide };
 }
 
-export function getBankSideConfig(period, splitFuntion, selectRowFunction) {
+export function getBankSideConfig(period,renderSplitFunction, selectRowFunction) {
 
     const onCellConfig = (record) => {
         return ({ onClick: () => { selectRowFunction(record) } })
-    }
-    const valueStyle = (text, record) => {
-        return {
-            // props: {
-            //     style: { color: parseInt(text) < 0 ? "red" : "green" }
-            // },
-            // children: <div >{text}</div>
-            children: <Money value={text} />
-        };
-
     }
 
 
@@ -104,12 +90,7 @@ export function getBankSideConfig(period, splitFuntion, selectRowFunction) {
         {
             title: 'Action',
             key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <a onClick={() => splitFuntion(record)} >Split </a>
-                    {/* <a onClick={()=>onSplit(record)} >Split {record.value}</a> */}
-                </Space>
-            ),
+            render:renderSplitFunction,
         },
     ];
 
