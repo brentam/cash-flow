@@ -13,10 +13,20 @@
           "id": 5,
           "value": 30,
           "type": "TRANSFER"
+        },
+        {
+          "id": 8,
+          "value": -6,
+          "type": "Sales Debit"
+        },
+         {
+          "id": 3,
+          "value": 11,
+          "type": "TRANSFER-OTHER"
         }
       ],
       "transactionSide": [
-        {
+          {
           "id": 19,
           "value": -10,
           "tType": "CHEQUE",
@@ -26,6 +36,20 @@
         {
           "id": 23,
           "value": 80,
+          "tType": "CASH_RECEIPT",
+          "bkType": "DEPOSIT",
+          "chequeNumber": ""
+        },
+        {
+          "id": 11,
+          "value": -79,
+          "tType": "CHEQUE",
+          "bkType": "CHEQUE_PAYMENT",
+          "chequeNumber": "#222222"
+        },
+        {
+          "id": 12,
+          "value": 20,
           "tType": "CASH_RECEIPT",
           "bkType": "DEPOSIT",
           "chequeNumber": ""

@@ -1,6 +1,9 @@
 import React, { createContext, useReducer,useState } from 'react'
 import Data from '../data/model.json';
 
+export const BANK_SIDE=+10;
+export const CASH_FLOW_SIDE=+20;
+
 const initialState={bankSide:[], transactionSide:[]};
 
 export const PeriodContext=createContext();
@@ -11,14 +14,32 @@ export const PeriodProvider=({children})=>{
     function changePeriod(period){
         setState(period);
     }
-    function splitBankSideTransaction({originalId,newTransactions}){
-        const bankSide=state.bankSide.slice(0);
-        const index=bankSide.map(function(e) { return e.id; }).indexOf(originalId);
-        bankSide.splice(index,1,...newTransactions);
-        
-        setState({...state,bankSide});
 
 
+    function splitTransaction(originalId,newValues,arrayName){
+        // const arr=state[arrayName].slice(0);
+        // const index=arr.map(function(e) { return e.id; }).indexOf(originalId);
+        // arr.splice(index,1,...newTransactions);
+        // let newState={...state};
+        // newState[arrayName]=arr;
+        // setState(newState);
+
+        const arr=state[arrayName].slice(0);
+        const index=arr.map(function(e) { return e.id; }).indexOf(originalId);
+
+        //todo find another way to generate new indexes..
+        const maxIndex=arr.length?(arr.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
+        let value=arr[index];
+        value= splitCopy(maxIndex,value,newValues);
+
+        arr.splice(index,1,...value);
+        let newState={...state};
+        newState[arrayName]=arr;
+        setState(newState);
+
+    }
+    function splitBankSideTransaction(originalId,newTransactions){
+        splitTransaction(originalId,newTransactions,"bankSide");
     }
 
     function splitCopy(maxTransactionId,transaction, values){
@@ -27,23 +48,30 @@ export const PeriodProvider=({children})=>{
         
     }
 
-    function splitCashFlowTransaction(originalTransactionId,newValues){
-        const transactionSide=state.transactionSide.slice(0);
-        const index=transactionSide.map(function(e) { return e.id; }).indexOf(originalTransactionId);
+    function splitCashFlowTransaction(originalId,newTransactions){
+        // const transactionSide=state.transactionSide.slice(0);
+        // const index=transactionSide.map(function(e) { return e.id; }).indexOf(originalTransactionId);
 
-        const maxIndex=transactionSide.length?(transactionSide.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
-        let ttt=transactionSide[index];
-        ttt= splitCopy(maxIndex,ttt,newValues);
+        // //todo find another way to generate new indexes..
+        // const maxIndex=transactionSide.length?(transactionSide.reduce((prev,current)=>{return (prev.id>current.id)?prev:current}).id):0;
+        // let ttt=transactionSide[index];
+        // ttt= splitCopy(maxIndex,ttt,newValues);
 
-        transactionSide.splice(index,1,...ttt);
+        // transactionSide.splice(index,1,...ttt);
         
-        setState({...state,transactionSide: transactionSide});
+        // setState({...state,transactionSide: transactionSide});
 
+        splitTransaction(originalId,newTransactions,"transactionSide");
+
+    }
+    function split(type,originalId,newTransactions){
+        const collectionName=(type===BANK_SIDE?"bankSide":"transactionSide")
+        splitTransaction(originalId,newTransactions,collectionName);
 
     }
 
 return (<PeriodContext.Provider
-value={{period:state,changePeriod,splitBankSideTransaction,splitCashFlowTransaction}}
+value={{period:state,changePeriod,split}}
 
 >{children}</PeriodContext.Provider>);
 }

@@ -1,8 +1,9 @@
 import React, { createContext, useState } from 'react'
 import Data from '../data/model.json';
+import { CASH_FLOW_SIDE, BANK_SIDE } from '../context/PeriodState'
 
 
-export const initialState = { visible: false, value: +0, id:-1,modalTransactions: [] }
+export const initialState = { visible: false, value: +0, id:-1,modalTransactions: [],type:CASH_FLOW_SIDE }
 
 export const TableModalContext = createContext(
   initialState
@@ -14,11 +15,11 @@ export function TableModalProvider({ children }) {
   function resetModal() {
     setState(initialState);
   }
-  function showModal({ visible, value,id }) {
+  function showModal({ type,visible, value,id }) {
     const modal = [];
     modal[0] = value;
     modal[1] = value;
-    setState({ ...state, visible: visible, value: value, id:id,modalTransactions: modal });
+    setState({ ...state, visible: visible, value: value, id:id,modalTransactions: modal ,type:type });
   }
 
   function handleChangeValues(value, index) {

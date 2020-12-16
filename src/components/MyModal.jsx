@@ -4,11 +4,11 @@ import { TableModalContext } from '../context/TableModalState'
 import { PeriodContext } from '../context/PeriodState'
 import '../theApp.css';
 
-export const MyModal = ({ resultFunction }) => {
+export const MyModal = () => {
 
-  const  splitCashFlowTransaction  = useContext(PeriodContext)["splitCashFlowTransaction"];
-  const { modalState, resetModal, handleChangeValues, createNewModalTransaction,deleteModal} = useContext(TableModalContext);
-  const { visible, value, modalTransactions } = modalState;
+  const {split} = useContext(PeriodContext);
+  const { modalState, resetModal, handleChangeValues, createNewModalTransaction, deleteModal } = useContext(TableModalContext);
+  const { type,visible, value, modalTransactions } = modalState;
   // const [amounts, setAmount] = useState([modalState.value]);
   const amounts = modalTransactions;
 
@@ -18,14 +18,13 @@ export const MyModal = ({ resultFunction }) => {
   // //   });
   // };
 
-  const handleOk = e => {
-    console.log(e);
-    splitCashFlowTransaction(modalState.id, modalTransactions);
-    resultFunction(amounts);
-    resetModal();
-    //   this.setState({
-    //     visible: false,
-    //   });
+  // function test(){
+  //   alert(t)
+  // }
+
+  const handleOk = (theUsedType) => {
+     split(type,modalState.id, modalTransactions);
+      resetModal();
   };
 
   const handleCancel = e => {
@@ -72,23 +71,23 @@ export const MyModal = ({ resultFunction }) => {
   return (
     <div >
       <Modal
-        title={`Split ` + value}
+        title={`Split ` + type }
         visible={visible}
         // onOk={handleOk}
-         onCancel={handleCancel}
+        onCancel={handleCancel}
 
         footer={[
           <Button key="back" onClick={handleCancel}>
             Return
             </Button>,
-          <Button key="ok" disabled={(value != total ) || transactionSize<2} type="primary" onClick={handleOk}>
+          <Button key="ok" disabled={(value != total) || transactionSize < 2} type="primary" onClick={()=>{handleOk(type)}}>
             Split
             </Button>,
         ]}
       >
         <Message value={value} total={total} size={transactionSize} />
         <Button className="btn" onClick={() => createNewModalTransaction(0)}>
-          <h3>Add new transaction</h3>
+          <h3>Add new transaction </h3>
         </Button>
         <form onSubmit={onSubmit}>
           {
@@ -103,7 +102,7 @@ export const MyModal = ({ resultFunction }) => {
                       value={amounts[idx]}
                       onChange={(value) => handleChange(value, idx)}
                     />
-                    <button className="delete-btn" onClick={()=>deleteModal(idx)}
+                    <button className="delete-btn" onClick={() => deleteModal(idx)}
                     >x</button>
                   </span>
                 </div>

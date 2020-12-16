@@ -7,11 +7,11 @@ function CashFlowSummary({ totals }) {
     // <div id="money-plus" class="money plus">0.00</div>
     <div className="inc-exp-container">
       <div>
-        <h4>Credit</h4>
+        <h4>Credits</h4>
         <Money value={totals.totalCredit} />
       </div>
       <div>
-        <h4>Debit</h4>
+        <h4>Debits</h4>
         <Money value={totals.totalDebit} />
       </div>
     </div>
