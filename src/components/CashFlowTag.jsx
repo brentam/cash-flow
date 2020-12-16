@@ -67,8 +67,7 @@ export const CashFlowTag = ({ type }) => {
         }
         return (
             <Space size="middle">
-                <a enabled="disable" onClick={() => onSplit(record)} >Split </a>
-                {/* <a onClick={()=>onSplit(record)} >Split {record.value}</a> */}
+                <a  onClick={() => onSplit(record)} >Split </a>
             </Space>
         )
     }
