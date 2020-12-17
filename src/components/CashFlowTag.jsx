@@ -1,32 +1,15 @@
 import React, { useContext, useState } from 'react'
 import { Table, Space } from 'antd';
 import { PeriodContext } from '../context/PeriodState'
-import { CASH_FLOW_SIDE, BANK_SIDE } from '../consts.js'
 import { TableModalContext } from '../context/TableModalState'
 import { MatchedContext } from '../context/MatchedState'
 import { MyModal } from './MyModal'
 import CashFlowSumary from './CashFlowSummary'
-import Money from './Money'
 import 'antd/dist/antd.css';
 import '../theApp.css';
-import { getBankSideConfig, getCashFlowSideConfig } from '../modalConfig.js';
+import {getTableConfig } from '../modalConfig.js';
 
 export const CashFlowTag = ({ type }) => {
-
-    const onCellConfig = (record) => {
-        return ({ onClick: () => { selectRowWhenClickinOnCell(record) } })
-    }
-    const valueStyle = (text, record) => {
-        return {
-            // props: {
-            //     style: { color: parseInt(text) < 0 ? "red" : "green" }
-            // },
-            // children: <div >{text}</div>
-            children: <Money value={text} />
-        };
-
-    }
-
 
     //   const { period, changePeriod } = useContext(PeriodContext);
     const { period } = useContext(PeriodContext);
@@ -40,15 +23,12 @@ export const CashFlowTag = ({ type }) => {
     }
 
 
-    const onSelectedRowKeysChange = (selectedRowKeys,selectedRows) => {
+    const onSelectedRowKeysChange = (selectedRowKeys, selectedRows) => {
         onSelectionChange(selectedRowKeys);
     }
 
 
-    const selectRowWhenClickinOnCell = (record) => {
-        if (!isValueInFocus(record.value)) {
-            return;
-        }
+    const selectRowWhenClickOnCell = (record) => {
         const selectedRowKeys = rowState.selectedRowKeys.slice(0);
         const indexOfRow = selectedRowKeys.indexOf(record.id);
         if (indexOfRow >= 0) {
@@ -60,33 +40,21 @@ export const CashFlowTag = ({ type }) => {
 
         onSelectionChange(selectedRowKeys);
     }
-    function renderSplit(record) {
-        if (!isValueInFocus(record.value)) {
-            return (
-                <Space size="middle"></Space>)
-        }
-        return (
-            <Space size="middle">
-                <a  onClick={() => onSplit(record)} >Split </a>
-            </Space>
-        )
-    }
 
     //load config for table rendering
-    const { columns, dataSource } = (type === CASH_FLOW_SIDE ?
-        getCashFlowSideConfig(period, renderSplit, selectRowWhenClickinOnCell) :
-        getBankSideConfig(period, renderSplit, selectRowWhenClickinOnCell)
-    );
+    const { columns, dataSource,disableCondition } =getTableConfig( type,period, onSplit, selectRowWhenClickOnCell,isValueInFocus);
 
     function onSelectionChange(selectedRowKeys) {
-        setRowState({ ...rowState, selectedRowKeys })
         if (selectedRowKeys.length) {
-            const value = dataSource.filter(element => element.id === selectedRowKeys[0].id)
-            changeFocusPerValue(value.value);
+            //todo find a better way to find the focus
+            const value = dataSource.filter(element => element.id === selectedRowKeys[0])
+            changeFocusPerValue(value[0].value);
         } else {
+            //todo should clear focus only when both tables selections are empty-
             clearFocus();
         }
 
+        setRowState({ ...rowState, selectedRowKeys })
     }
 
 
@@ -108,13 +76,9 @@ export const CashFlowTag = ({ type }) => {
     const { selectedRowKeys } = rowState;
     const rowSelection = {
         selectedRowKeys,
-        hideSelectAll:true,
+        hideSelectAll: true,
         onChange: onSelectedRowKeysChange,
-        getCheckboxProps: (record) => ({
-            disabled: !isValueInFocus(record.value),
-            // Column configuration not to be checked
-            id: record.id,
-        }),
+        getCheckboxProps: disableCondition,
     };
     // alert(maxIndex.c);
     return (

@@ -1,99 +1,141 @@
 import Money from './components/Money'
-import { Modal, Table, Space, Alert } from 'antd';
+import { Modal, Table, Space, Alert, Typography } from 'antd';
+import { CASH_FLOW_SIDE, BANK_SIDE } from './consts.js'
 
 
-const valueStyle = (text, record) => {
+
+// function renderSplit(record) {
+//     if (!isValueInFocus(record.value)) {
+//         return (
+//             <Space size="middle"></Space>)
+//     }
+//     return (
+//         <Space size="middle">
+//             <a onClick={() => onSplit(record)} >Split </a>
+//         </Space>
+//     )
+// }
+const valueStyle = (value) => {
     return {
         // props: {
         //     style: { color: parseInt(text) < 0 ? "red" : "green" }
         // },
         // children: <div >{text}</div>
-        children: <Money value={text} />
+        children: <Money value={value} />
     };
 
 }
 
 
-export function getCashFlowSideConfig(period, renderSplitFunction, selectRowFunction) {
+export function getTableConfig(type, period, splitFunction, selectRowFunction, lineEnablerFunction) {
+
+    // will conidtionaly enable row selection by click on any cell with this config
 
     const onCellConfig = (record) => {
-        return ({ onClick: () => { selectRowFunction(record) } })
-    }
-    
 
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-        },
-        {
-            title: 'BKType',
-            dataIndex: 'bkType',
-            onCell: onCellConfig
-        },
-        {
-            title: 'Value',
-            dataIndex: 'value',
-            render: valueStyle,
-            onCell: onCellConfig
+        if (!lineEnablerFunction(record.value)) {
+            return ({});
+        } else {
+            return ({ onClick: () => { selectRowFunction(record) } })
         }
-        ,
-        {
-            title: 'CF Type',
-            dataIndex: 'tType',
-            onCell: onCellConfig
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: renderSplitFunction,
-        },
-    ];
-
-
-    return { columns: columns, dataSource: period.transactionSide };
-}
-
-export function getBankSideConfig(period,renderSplitFunction, selectRowFunction) {
-
-    const onCellConfig = (record) => {
-        return ({ onClick: () => { selectRowFunction(record) } })
     }
 
+    //will conditionaly render the split 'link'
+    const renderSplit = (record) => {
+        let test = lineEnablerFunction(record.value);
+        if (!test) {
+            return (<Space size="middle"></Space>)
+        }
+        return (
+            <Space size="middle">
+                <a onClick={() => splitFunction(record)} >Split </a>
+            </Space>
+        )
+    }
+
+    //function for the table to know if row is disable , will return in this config
+    const disableCondition = (record) => ({
+        disabled: !lineEnablerFunction(record.value),
+        // Column configuration not to be checked
+        id: record.id,
+    })
 
 
-    const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-        },
-        {
-            title: 'Type',
-            dataIndex: 'type',
-            onCell: onCellConfig
-        }, {
-            title: 'Value',
-            dataIndex: 'value',
-            render(text, record) {
-                return {
-                    // props: {
-                    //     style: { background: parseInt(text) < 0 ? "red" : "green" }
-                    // },
-                    children: <Money value={text}/>
-                };
-            },
+    let columns;
+    let dataSource;
+    switch (type) {
+        case CASH_FLOW_SIDE: {
 
-            onCell: (record) => ({ onClick: () => { selectRowFunction(record); } }),
+            dataSource = period.transactionSide;
+            columns = [
+                {
+                    title: 'ID',
+                    dataIndex: 'id',
+                },
+                {
+                    title: 'BKType',
+                    dataIndex: 'bkType',
+                    onCell: onCellConfig
+                },
+                {
+                    title: 'Value',
+                    dataIndex: 'value',
+                    render: valueStyle,
+                    onCell: onCellConfig
+                }
+                ,
+                {
+                    title: 'CF Type',
+                    dataIndex: 'tType',
+                    onCell: onCellConfig
+                },
+                {
+                    title: 'Action',
+                    key: 'action',
+                    render: renderSplit,
+                },
+            ];
+            break;
+        }
+        case BANK_SIDE: {
+            dataSource = period.bankSide;
+            columns = [
+                {
+                    title: 'ID',
+                    dataIndex: 'id',
+                },
+                {
+                    title: 'Type',
+                    dataIndex: 'type',
+                    onCell: onCellConfig
+                }, {
+                    title: 'Value',
+                    dataIndex: 'value',
+                    render: valueStyle,
+                    onCell: onCellConfig
+
+                }
+                ,
+                {
+                    title: 'Action',
+                    key: 'action',
+                    render: renderSplit,
+                },
+            ];
+            break;
 
         }
-        ,
-        {
-            title: 'Action',
-            key: 'action',
-            render:renderSplitFunction,
-        },
-    ];
 
+        default:
+            throw "no configuration found for table " + type;
 
-    return { columns: columns, dataSource: period.bankSide };
+    }
+    return { columns: columns, dataSource: dataSource, disableCondition: disableCondition };
+
 }
+
+
+
+
+
+
