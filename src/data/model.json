@@ -3,16 +3,24 @@
   "period": [
     {
       "dateId": "06/10/2020",
+      "tags": 
+        { "1":{ "bankTags": [5], "transactionTags": [12,18]},
+          "2":{ "bankTags": [2], "transactionTags": [19,11]}
+
+        },
+    
       "bankSide": [
         {
           "id": 2,
           "value": -45,
           "type": "Sales Debit"
+           ,"tagged": "2"
         },
         {
           "id": 5,
           "value": 30,
           "type": "TRANSFER"
+           ,"tagged": "1"
         },
         {
           "id": 8,
@@ -32,6 +40,7 @@
           "tType": "CHEQUE",
           "bkType": "CHEQUE_PAYMENT",
           "chequeNumber": "#222222"
+           ,"tagged": "2"
         },
         {
           "id": 23,
@@ -42,10 +51,11 @@
         },
         {
           "id": 11,
-          "value": -79,
+          "value": -35,
           "tType": "CHEQUE",
           "bkType": "CHEQUE_PAYMENT",
           "chequeNumber": "#222222"
+           ,"tagged": "2"
         },
         {
           "id": 12,
@@ -53,6 +63,15 @@
           "tType": "CASH_RECEIPT",
           "bkType": "DEPOSIT",
           "chequeNumber": ""
+           ,"tagged": "1"
+        },
+        {
+          "id": 18,
+          "value": 10,
+          "tType": "CASH_RECEIPT",
+          "bkType": "DEPOSIT",
+          "chequeNumber": ""
+           ,"tagged": "1"
         }
       ]
     }

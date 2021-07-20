@@ -68,10 +68,16 @@ export function getTableConfig(type, period, splitFunction, selectRowFunction, l
 
             dataSource = period.transactionSide;
             columns = [
+                   {
+                    title: 'TAG',
+                    dataIndex: 'tagged',
+                },
                 {
                     title: 'ID',
                     dataIndex: 'id',
+                    onCell: onCellConfig
                 },
+               
                 {
                     title: 'BKType',
                     dataIndex: 'bkType',
@@ -100,10 +106,16 @@ export function getTableConfig(type, period, splitFunction, selectRowFunction, l
         case BANK_SIDE: {
             dataSource = period.bankSide;
             columns = [
+                 {
+                    title: 'TAG',
+                    dataIndex: 'tagged',
+                },
                 {
                     title: 'ID',
                     dataIndex: 'id',
+                    onCell: onCellConfig
                 },
+                
                 {
                     title: 'Type',
                     dataIndex: 'type',
